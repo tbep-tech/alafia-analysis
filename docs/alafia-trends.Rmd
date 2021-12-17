@@ -1,0 +1,128 @@
+---
+title: "Alafia River water quality trends"
+author: "M. W. Beck"
+date: "`r format(Sys.time(), '%d %B, %Y')`"
+output: html_document
+---
+
+```{r setup, warning = F, message = F, echo = F}
+library(tidyverse)
+library(knitr)
+library(here)
+library(sf)
+library(leaflet)
+library(lubridate)
+
+source(here('R/funcs.R'))
+
+opts_chunk$set(warning = FALSE, message = FALSE, echo = F, fig.align = 'center')
+
+load(file = here('data/aladat.RData'))
+load(file = here('data/alaloc.RData'))
+```
+
+Only marine stations were evaluated:
+
+```{r, out.width = '100%'}
+leaflet(alaloc) %>%
+  addProviderTiles(providers$CartoDB.Positron) %>% 
+  addLabelOnlyMarkers(label =  ~station, 
+                      labelOptions = labelOptions(noHide = T,
+                                                  direction = 'auto',
+                                                  textOnly = T, textsize = '18px'))
+```
+
+Length of record varied by location:
+
+```{r, fig.height = 8, fig.width = 8}
+
+toplo <- aladat %>% 
+  select(station, yr, lab) %>% 
+  group_by(station, yr, lab) %>% 
+  summarise(`Obs. (n)` = n())
+
+p <- ggplot(toplo, aes(x = yr, y = factor(station), fill = `Obs. (n)`)) + 
+  geom_tile()+ #colour = 'lightgrey') + 
+  facet_wrap(~ lab, ncol = 1) + 
+  theme_bw() + 
+  theme(
+    panel.grid.major = element_blank(), 
+    panel.grid.minor= element_blank(),
+    strip.background = element_blank(), 
+    axis.title.x = element_blank(), 
+    legend.position = 'top', 
+    axis.text.y = element_text(size = 7)
+  ) + 
+  scale_fill_viridis_c() + 
+  labs(
+    y = 'Station'
+  )
+
+p
+```
+
+#  2021 comparison with historical {.tabset}
+
+## Log-scale {.tabset .tabset-pills}
+
+### Chl-a
+
+```{r, fig.height = 4, fig.width = 8}
+box_fun(aladat, param = 'chla', log = T)
+```
+
+### TN
+
+```{r, fig.height = 4, fig.width = 8}
+box_fun(aladat, param = 'tn', log = T)
+```
+
+### Nitrate-Nitrite
+
+```{r, fig.height = 4, fig.width = 8}
+box_fun(aladat, param = 'no23', log = T)
+```
+
+### Ammonia
+
+```{r, fig.height = 4, fig.width = 8}
+box_fun(aladat, param = 'nh4', log = T)
+```
+
+### Enterococci
+
+```{r, fig.height = 4, fig.width = 8}
+box_fun(aladat, param = 'entero', log = T)
+```
+
+## Arithmetic scale {.tabset .tabset-pills}
+
+### Chl-a
+
+```{r, fig.height = 4, fig.width = 8}
+box_fun(aladat, param = 'chla', log = F)
+```
+
+### TN
+
+```{r, fig.height = 4, fig.width = 8}
+box_fun(aladat, param = 'tn', log = F)
+```
+
+### Nitrate-Nitrite
+
+```{r, fig.height = 4, fig.width = 8}
+box_fun(aladat, param = 'no23', log = F)
+```
+
+### Ammonia
+
+```{r, fig.height = 4, fig.width = 8}
+box_fun(aladat, param = 'nh4', log = F)
+```
+
+### Enterococci
+
+```{r, fig.height = 4, fig.width = 8}
+box_fun(aladat, param = 'entero', log = F)
+```
