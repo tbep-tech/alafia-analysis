@@ -15,7 +15,7 @@ library(lubridate)
 
 source(here('R/funcs.R'))
 
-opts_chunk$set(warning = FALSE, message = FALSE, echo = F, fig.align = 'center')
+opts_chunk$set(warning = FALSE, message = FALSE, echo = F, fig.align = 'center', out.width = '100%')
 
 load(file = here('data/aladat.RData'))
 load(file = here('data/alaloc.RData'))
@@ -23,7 +23,7 @@ load(file = here('data/alaloc.RData'))
 
 Only marine stations were evaluated:
 
-```{r, out.width = '100%'}
+```{r}
 leaflet(alaloc) %>%
   addProviderTiles(providers$CartoDB.Positron) %>% 
   addLabelOnlyMarkers(label =  ~station, 
@@ -34,7 +34,7 @@ leaflet(alaloc) %>%
 
 Length of record varied by location:
 
-```{r, fig.height = 8, fig.width = 8}
+```{r, fig.height = 8, fig.width = 8, out.width = '80%'}
 
 toplo <- aladat %>% 
   select(station, yr, lab) %>% 

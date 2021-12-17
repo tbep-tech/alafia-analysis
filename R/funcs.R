@@ -12,8 +12,8 @@ box_fun <- function(datin, param,  yrsel = 2021, ptsz = 0.5,
     pull(yr) %>% 
     unique()
   
-  yrrng <- yrs[!yrs %in% yrsel] %>% 
-    range(na.rm = T)
+  yrrng <- c(2010, 2020)#yrs[!yrs %in% yrsel] %>% 
+    # range(na.rm = T)
   
   # toplo1 is all but current year
   toplo1 <- aves %>%
